@@ -1,0 +1,63 @@
+---
+- name: Desplegar servidor web con Docker
+  hosts: web
+  become: true
+  vars:
+    app_port: 8080
+    app_message: "Desplegado con Ansible"
+
+  tasks:
+    - name: Instalar Docker y el SDK de Python para Docker
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - python3-docker
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Asegurar que Docker esté iniciado y habilitado
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Crear directorio del sitio
+      ansible.builtin.file:
+        path: /opt/miweb
+        state: directory
+        mode: "0755"
+
+    - name: Generar index.html desde la plantilla
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: /opt/miweb/index.html
+        mode: "0644"
+      notify: Reiniciar contenedor web
+
+    - name: Ejecutar el contenedor nginx
+      community.docker.docker_container:
+        name: miweb
+        image: nginx:1.27
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "{{ app_port }}:80"
+        volumes:
+          - /opt/miweb:/usr/share/nginx/html:ro
+
+    - name: Verificar que el sitio responde
+      ansible.builtin.uri:
+        url: "http://localhost:{{ app_port }}"
+        status_code: 200
+      register: health
+      retries: 5
+      delay: 3
+      until: health.status == 200
+
+  handlers:
+    - name: Reiniciar contenedor web
+      community.docker.docker_container:
+        name: miweb
+        state: started
+        restart: true

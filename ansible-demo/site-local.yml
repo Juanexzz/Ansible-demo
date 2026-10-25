@@ -1,0 +1,55 @@
+---
+# Variante de demostración SIN máquina virtual: se ejecuta sobre el mismo
+# equipo (Codespaces / Play with Docker) donde Docker ya está instalado.
+# Es el mismo playbook que site.yml, sin apt/service/become.
+- name: Demo local - servidor web con Docker
+  hosts: local
+  vars:
+    app_port: 8080
+    app_message: "Desplegado con Ansible"
+    site_dir: "{{ playbook_dir }}/web"
+
+  tasks:
+    - name: Comprobar que Docker está disponible
+      ansible.builtin.command: docker --version
+      changed_when: false
+
+    - name: Crear directorio del sitio
+      ansible.builtin.file:
+        path: "{{ site_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Generar index.html desde la plantilla
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: "{{ site_dir }}/index.html"
+        mode: "0644"
+      notify: Reiniciar contenedor web
+
+    - name: Ejecutar el contenedor nginx
+      community.docker.docker_container:
+        name: miweb
+        image: nginx:1.27
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "{{ app_port }}:80"
+        volumes:
+          - "{{ site_dir }}:/usr/share/nginx/html:ro"
+
+    - name: Verificar que el sitio responde
+      ansible.builtin.uri:
+        url: "http://localhost:{{ app_port }}"
+        status_code: 200
+      register: health
+      retries: 5
+      delay: 3
+      until: health.status == 200
+
+  handlers:
+    - name: Reiniciar contenedor web
+      community.docker.docker_container:
+        name: miweb
+        state: started
+        restart: true
