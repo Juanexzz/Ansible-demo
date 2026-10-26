@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Guía de Demostración - Ansible Demo (Codespaces)</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1.2cm 1.4cm 1.4cm 1.4cm;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1f2937;
+      background: #ffffff;
+      line-height: 1.45;
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Portada / Header */
+    .header {
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .header-title h1 {
+      margin: 0 0 4px 0;
+      color: #1e3a8a;
+      font-size: 20pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title p {
+      margin: 0;
+      color: #4b5563;
+      font-size: 11pt;
+      font-weight: 500;
+    }
+
+    .badge-cloud {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tabla Resumen / Cheat Sheet */
+    .quick-sheet {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 22px;
+      font-size: 9pt;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .quick-sheet th {
+      background: #1e3a8a;
+      color: #ffffff;
+      text-align: left;
+      padding: 7px 10px;
+      font-weight: 600;
+    }
+
+    .quick-sheet td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .quick-sheet tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .quick-sheet code {
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 8.5pt;
+      font-weight: 600;
+    }
+
+    /* Secciones */
+    h2.section-title {
+      color: #1e3a8a;
+      font-size: 13pt;
+      font-weight: 700;
+      border-bottom: 1.5px solid #e5e7eb;
+      padding-bottom: 4px;
+      margin: 18px 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Pasos */
+    .step-card {
+      border: 1px solid #e5e7eb;
+      border-left: 4px solid #2563eb;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      background: #ffffff;
+      page-break-inside: avoid;
+    }
+
+    .step-card.highlight {
+      border-left-color: #059669;
+      background: #f0fdf4;
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .step-number {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .step-tag {
+      font-size: 8pt;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .step-tag.green {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* Bloque de Código */
+    .cmd-box {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 7px 10px;
+      border-radius: 5px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 9pt;
+      margin: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cmd-box span.prompt {
+      color: #38bdf8;
+      user-select: none;
+      margin-right: 6px;
+    }
+
+    .cmd-box span.cmd-text {
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    /* Explicación pedagógica */
+    .talking-points {
+      background: #f8fafc;
+      border-left: 3px solid #94a3b8;
+      padding: 6px 10px;
+      margin-top: 6px;
+      font-size: 9pt;
+      color: #334155;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .talking-points strong {
+      color: #0f172a;
+    }
+
+    .talking-points ul {
+      margin: 4px 0 0 0;
+      padding-left: 18px;
+    }
+
+    .talking-points li {
+      margin-bottom: 2px;
+    }
+
+    /* Cajas informativas */
+    .alert-box {
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 9pt;
+      margin: 10px 0;
+      page-break-inside: avoid;
+    }
+
+    .alert-blue {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    .alert-amber {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    /* Preguntas Frecuentes */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+      page-break-inside: avoid;
+    }
+
+    .faq-item {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 5px;
+      padding: 8px 10px;
+      font-size: 8.5pt;
+    }
+
+    .faq-item strong {
+      display: block;
+      color: #1e3a8a;
+      margin-bottom: 3px;
+      font-size: 9pt;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 8pt;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <div class="header">
+    <div class="header-title">
+      <h1>Guía de Exposición: Ansible Demo</h1>
+      <p>Despliegue Declarativo con Docker, Nginx y Plantillas Jinja2 en GitHub Codespaces</p>
+    </div>
+    <div class="badge-cloud">GitHub Codespaces</div>
+  </div>
+
+  <!-- PREPARATIVOS -->
+  <div class="alert-box alert-blue">
+    <strong>Antes de empezar a exponer (1 minuto):</strong>
+    1. Abre tu repositorio en GitHub y haz clic en <strong>Code > Codespaces > Create codespace on main</strong>.<br>
+    2. Espera a que termine la carga y abre la terminal con <code>Ctrl + `</code>.<br>
+    3. Asegúrate de estar en la carpeta correcta ejecutando: <code>cd ansible-demo</code>.
+  </div>
+
+  <!-- CHEAT SHEET COMPACTO -->
+  <h2 class="section-title">Resumen Rápido de Comandos (Secuencia en Clase)</h2>
+  <table class="quick-sheet">
+    <thead>
+      <tr>
+        <th style="width: 8%;">#</th>
+        <th style="width: 28%;">Concepto</th>
+        <th style="width: 44%;">Comando a Ejecutar</th>
+        <th style="width: 20%;">Resultado Esperado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Comando Ad-hoc Ping</td>
+        <td><code>ansible localhost -i inventory-local.ini -m ping</code></td>
+        <td><code>"ping": "pong"</code> (changed=false)</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Chequeo de Sintaxis</td>
+        <td><code>ansible-playbook -i inventory-local.ini site-local.yml --syntax-check</code></td>
+        <td><code>playbook: site-local.yml</code></td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Simulación (Dry-Run + Diff)</td>
+        <td><code>ansible-playbook -i inventory-local.ini site-local.yml --check --diff</code></td>
+        <td>Muestra diffs con <code>+</code> y <code>-</code></td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>Aprovisionamiento Real</td>
+        <td><code>ansible-playbook -i inventory-local.ini site-local.yml</code></td>
+        <td><code>changed=4, failed=0</code></td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td><strong>Idempotencia</strong> (Re-ejecución)</td>
+        <td><code>ansible-playbook -i inventory-local.ini site-local.yml</code></td>
+        <td><strong><code>changed=0, failed=0</code></strong></td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td>Verificación Web</td>
+        <td><code>curl -i http://localhost:8080</code></td>
+        <td>HTTP 200 OK + HTML renderizado</td>
+      </tr>
+      <tr>
+        <td><strong>7</strong></td>
+        <td>Cambio de Var + Handlers</td>
+        <td>Editar <code>app_message</code> y reejecutar playbook</td>
+        <td>Solo cambian plantilla y handler (<code>changed=2</code>)</td>
+      </tr>
+      <tr>
+        <td><strong>8</strong></td>
+        <td>Linter de Calidad</td>
+        <td><code>ansible-lint site.yml site-local.yml</code></td>
+        <td><code>Passed: 0 failures (production)</code></td>
+      </tr>
+      <tr>
+        <td><strong>Reset</strong></td>
+        <td>Reiniciar Entorno</td>
+        <td><code>docker rm -f miweb && rm -rf web</code></td>
+        <td>Entorno 100% limpio para repetir</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PASO A PASO DETALLADO -->
+  <h2 class="section-title">Guión Paso a Paso y Qué Explicar a la Audiencia</h2>
+
+  <!-- PASO 1 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 1: Verificación de Conectividad (Ad-hoc Ping)</span>
+      <span class="step-tag">Ad-hoc Command</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible localhost -i inventory-local.ini -m ping</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"Aquí usamos un comando ad-hoc (una tarea directa sin necesidad de escribir un playbook)."</em></li>
+        <li><em>"El módulo <code>ping</code> de Ansible NO es un ping ICMP de red: comprueba conectividad real y verifica que existe un intérprete Python funcional en el host de destino."</em></li>
+        <li><em>"La respuesta debe ser <code>SUCCESS</code> con <code>'ping': 'pong'</code> y <code>changed: false</code> porque consultar no altera el sistema."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 2: Validación Temprana de Sintaxis (Syntax Check)</span>
+      <span class="step-tag">Fail-Fast</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible-playbook -i inventory-local.ini site-local.yml --syntax-check</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"Antes de tocar cualquier servidor o recurso, validamos la estructura del playbook."</em></li>
+        <li><em>"Detecta errores comunes como mala indentación YAML, llaves de Jinja2 mal cerradas o nombres de módulos inexistentes."</em></li>
+        <li><em>"Al devolver simplemente el nombre del playbook, sabemos que la sintaxis es impecable."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PASO 3 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 3: Modo Simulación y Diff (Dry-Run Audit)</span>
+      <span class="step-tag">Seguridad / Auditoría</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible-playbook -i inventory-local.ini site-local.yml --check --diff</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"La bandera <code>--check</code> hace un dry-run (simulación): calcula qué cambios ocurrirían sin aplicarlos realmente."</em></li>
+        <li><em>"La bandera <code>--diff</code> nos muestra las diferencias exactas línea por línea (bloques verdes con <code>+</code> y rojos con <code>-</code>)."</em></li>
+        <li><em>"Miren cómo simula la creación del directorio web, el archivo HTML y el contenedor Docker sin haber creado nada aún en el disco."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 4: Primera Ejecución (Aprovisionamiento Real)</span>
+      <span class="step-tag">Despliegue</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible-playbook -i inventory-local.ini site-local.yml</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"Ahora aplicamos el estado deseado en la máquina: Ansible crea la carpeta <code>web/</code>, compila la plantilla Jinja2 con los facts del sistema, descarga la imagen de Nginx y levanta el contenedor mapeando el puerto 8080."</em></li>
+        <li><em>"Al terminar, notarán que se ejecuta el handler <code>Reiniciar contenedor web</code> porque la tarea de la plantilla notificó un cambio."</em></li>
+        <li><em>"El recap final muestra: <code>changed=4, failed=0</code>."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PASO 5 -->
+  <div class="step-card highlight">
+    <div class="step-header">
+      <span class="step-number">Paso 5: Demostración de Idempotencia (Concepto Central)</span>
+      <span class="step-tag green">Idempotencia Total</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible-playbook -i inventory-local.ini site-local.yml</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase (¡Momento clave!):</strong>
+      <ul>
+        <li><em>"Ejecutamos exactamente el mismo comando otra vez sin tocar nada."</em></li>
+        <li><em>"Observen el resultado: <strong><code>changed=0, failed=0</code></strong>. Todas las tareas salen en verde (<code>ok</code>)."</em></li>
+        <li><em>"Esto demuestra la <strong>idempotencia</strong>: Ansible no es un script de Bash secuencial que recrea cosas a ciegas; compara el estado actual con el estado deseado y, como ya coinciden, no hace operaciones redundantes ni reinicia servicios innecesariamente."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PASO 6 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 6: Verificación en Vivo del Servicio Nginx</span>
+      <span class="step-tag">Testing / Visual</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>curl -i http://localhost:8080</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"Obtenemos un código <code>HTTP/1.1 200 OK</code>. La página muestra el mensaje configurado y los datos del host recopilados dinámicamente por Ansible (<code>ansible_facts</code>)."</em></li>
+        <li><strong>Demostración visual:</strong> Ve a la pestaña inferior <strong>Ports</strong> en Codespaces, busca el puerto <strong>8080</strong> y haz clic en el icono del globo terráqueo para abrir la web en una pestaña del navegador ante toda la clase.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PASO 7 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 7: Comportamiento Reactivo y Handlers</span>
+      <span class="step-tag">Handlers / Event-Driven</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>sed -i 's/app_message: "Desplegado con Ansible"/app_message: "Desplegado con Ansible - Demo en Vivo"/' site-local.yml</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible-playbook -i inventory-local.ini site-local.yml</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"Cambiamos solo el mensaje de la aplicación. Miren cómo reacciona Ansible: el contenedor y el directorio no se recrean (<code>ok</code>), únicamente la plantilla y el handler de reinicio aparecen como <code>changed=2</code>."</em></li>
+        <li><em>"Refrescamos el navegador y vemos el nuevo texto en vivo. Luego revertimos el cambio para dejarlo limpio:"</em><br>
+        <code>sed -i 's/app_message: "Desplegado con Ansible - Demo en Vivo"/app_message: "Desplegado con Ansible"/' site-local.yml && ansible-playbook -i inventory-local.ini site-local.yml</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PASO 8 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-number">Paso 8: Buenas Prácticas y Calidad (ansible-lint)</span>
+      <span class="step-tag">CI/CD Standards</span>
+    </div>
+    <div class="cmd-box">
+      <span class="cmd-text"><span class="prompt">$</span>ansible-lint site.yml site-local.yml</span>
+    </div>
+    <div class="talking-points">
+      <strong>Qué decir en clase:</strong>
+      <ul>
+        <li><em>"En la industria moderna no basta con que un playbook funcione: debe cumplir estándares de seguridad, sintaxis y mantenibilidad."</em></li>
+        <li><em>"<code>ansible-lint</code> certifica que ambos playbooks alcanzan el perfil máximo de <strong>production</strong> con 0 errores y 0 advertencias."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- COMANDOS DE RESET -->
+  <h2 class="section-title">Comandos de Reinicio (Plan B si te piden repetir la demo)</h2>
+  <div class="alert-box alert-amber">
+    Si el profesor te dice <em>"¡Vuélvelo a hacer desde cero para ver qué pasa!"</em>, solo ejecuta este comando:
+    <div class="cmd-box" style="margin: 6px 0 0 0;">
+      <span class="cmd-text"><span class="prompt">$</span>docker rm -f miweb && rm -rf web</span>
+    </div>
+    Esto elimina el contenedor y la carpeta generada, permitiéndote empezar nuevamente desde el <strong>Paso 1</strong> con total tranquilidad.
+  </div>
+
+  <!-- PREGUNTAS FRECUENTES DEL PROFESOR -->
+  <h2 class="section-title">Posibles Preguntas del Profesor y Respuestas Rápidas</h2>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <strong>1. ¿Por qué usamos site-local.yml en lugar de site.yml?</strong>
+      <code>site.yml</code> está diseñado para conectarse por SSH a una máquina virtual remota (ej. Ubuntu en AWS o Proxmox) e instala Docker desde cero con <code>apt</code>. <code>site-local.yml</code> es la variante para entornos de desarrollo (Codespaces / Docker-in-Docker) donde Docker ya está disponible.
+    </div>
+    <div class="faq-item">
+      <strong>2. ¿Qué es un Handler y cuándo se ejecuta?</strong>
+      Un Handler es una tarea especial que solo se ejecuta al final del play y <em>únicamente</em> si otra tarea previa notificó un cambio (con <code>notify</code>). Si la plantilla no cambió, el handler de reinicio no se ejecuta, ahorrando tiempo y evitando caídas de servicio.
+    </div>
+    <div class="faq-item">
+      <strong>3. ¿De dónde saca Ansible el sistema operativo en el HTML?</strong>
+      De la fase de <strong>Gathering Facts</strong>. Ansible ejecuta automáticamente el módulo <code>setup</code> al iniciar el playbook, recopilando metadatos del host (distribución, memoria, IP, CPUs) y poniéndolos disponibles en la variable <code>ansible_facts</code>.
+    </div>
+    <div class="faq-item">
+      <strong>4. ¿Cómo garantiza Ansible la idempotencia con Docker?</strong>
+      La colección <code>community.docker</code> consulta la API del daemon de Docker antes de actuar. Compara la imagen, puertos mapeados, volúmenes y estado. Si el contenedor existente coincide exactamente con la declaración YAML, devuelve <code>changed=false</code>.
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Proyecto: Ansible Academic Demo • GitHub Codespaces</span>
+    <span>Listo para imprimir o llevar en tableta / móvil</span>
+  </div>
+
+</body>
+</html>
