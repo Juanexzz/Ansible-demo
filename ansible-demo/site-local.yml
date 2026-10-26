@@ -51,5 +51,6 @@
     - name: Reiniciar contenedor web
       community.docker.docker_container:
         name: miweb
+        image: nginx:1.27
         state: started
         restart: true

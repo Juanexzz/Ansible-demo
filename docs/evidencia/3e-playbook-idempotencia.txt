@@ -1,0 +1,25 @@
+[WARNING]: Ansible is being run in a world writable directory (/workspaces/Ansible-demo/ansible-demo), ignoring it as an ansible.cfg source. For more information see https://docs.ansible.com/ansible/devel/reference_appendices/config.html#cfg-in-world-writable-dir
+
+PLAY [Demo local - servidor web con Docker] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Comprobar que Docker está disponible] ************************************
+ok: [localhost]
+
+TASK [Crear directorio del sitio] **********************************************
+ok: [localhost]
+
+TASK [Generar index.html desde la plantilla] ***********************************
+ok: [localhost]
+
+TASK [Ejecutar el contenedor nginx] ********************************************
+ok: [localhost]
+
+TASK [Verificar que el sitio responde] *****************************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
